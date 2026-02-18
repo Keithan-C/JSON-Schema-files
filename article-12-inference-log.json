@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EU AI Act Article 12: Automated Logging Schema",
+  "description": "Standardized telemetry format for high-risk AI system traceability",
+  "type": "object",
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC ISO 8601 timestamp of the inference event"
+        },
+        "model_version": {
+          "type": "string",
+          "description": "Unique identifier for the model version and weights used"
+        },
+        "environment_id": {
+          "type": "string",
+          "description": "Production environment identifier (e.g., ADAS_Middleware_v4)"
+        }
+      },
+      "required": ["timestamp", "model_version"]
+    },
+    "input_verification": {
+      "type": "object",
+      "properties": {
+        "input_data_integrity": {
+          "type": "boolean",
+          "description": "Confirmation that input sensors/data met quality thresholds"
+        },
+        "sensor_health_status": {
+          "type": "string",
+          "enum": ["NOMINAL", "DEGRADED", "CRITICAL"]
+        }
+      }
+    },
+    "inference_logic": {
+      "type": "object",
+      "properties": {
+        "confidence_threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "The required minimum confidence for the automated decision"
+        },
+        "actual_confidence_score": {
+          "type": "number",
+          "description": "The probability score assigned by the model to the output"
+        },
+        "decision_path": {
+          "type": "string",
+          "description": "Identifier for the logic branch taken (e.g., Procurement_Rule_8)"
+        }
+      },
+      "required": ["confidence_threshold", "actual_confidence_score"]
+    },
+    "oversight_log": {
+      "type": "object",
+      "properties": {
+        "human_intervention": {
+          "type": "boolean",
+          "description": "Flag indicating if a human operator overrode the AI decision"
+        },
+        "override_reason": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "required": ["metadata", "inference_logic"]
+}
